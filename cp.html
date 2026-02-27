@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AyoCraft — Дом</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: rgba(255,255,255,0.04);
+      --accent: #43e8d8;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --grid: rgba(255,255,255,0.04);
+      --card: rgba(255,255,255,0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: 'Space Grotesk', sans-serif; color: var(--text);
+      background: radial-gradient(circle at 15% 20%, rgba(67,232,216,0.12), transparent 25%),
+                  radial-gradient(circle at 85% 10%, rgba(126,139,255,0.12), transparent 20%),
+                  var(--bg);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    .grid {
+      position: fixed; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(0,0,0,1) 65%);
+    }
+    header {
+      max-width: 1200px; margin: 0 auto; padding: 48px 24px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand { font-weight: 600; letter-spacing: 0.08em; font-size: 18px; color: var(--accent); }
+    .pill { padding: 8px 14px; background: var(--panel); border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; color: var(--muted); }
+    main { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    .hero {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 32px; align-items: center;
+      padding: 24px 0 12px;
+    }
+    .hero h1 { margin: 0 0 12px; font-size: clamp(32px, 6vw, 52px); }
+    .hero p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .cta-row { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .btn {
+      border: none; color: #0b0c10; background: var(--accent); padding: 12px 18px; border-radius: 12px;
+      font-weight: 600; cursor: pointer; box-shadow: 0 10px 30px rgba(67,232,216,0.25); transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 14px 34px rgba(67,232,216,0.32); }
+    .ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.12); box-shadow: none; }
+    .panel {
+      margin-top: 36px; padding: 22px; border-radius: 16px; background: var(--panel); border: 1px solid rgba(255,255,255,0.06);
+    }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; }
+    .metric { background: var(--card); border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); }
+    .metric .label { color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .metric .value { margin-top: 6px; font-size: 24px; font-weight: 600; }
+    .section-title { margin: 52px 0 18px; font-size: 24px; letter-spacing: 0.02em; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--card); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.08);
+      position: relative; overflow: hidden;
+    }
+    .card::after {
+      content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(67,232,216,0.12), transparent 45%);
+      opacity: 0; transition: opacity 200ms ease;
+    }
+    .card:hover::after { opacity: 1; }
+    .card header { display: flex; align-items: center; gap: 12px; padding: 0; margin: 0; }
+    .avatar {
+      width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.15);
+    }
+    .name { font-weight: 600; font-size: 17px; }
+    .role { color: var(--muted); font-size: 14px; }
+    .meta { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+    .tag {
+      padding: 6px 10px; background: rgba(255,255,255,0.06); border-radius: 10px; border: 1px solid rgba(255,255,255,0.04);
+    }
+    .footer { margin: 46px 0 18px; color: var(--muted); text-align: center; font-size: 13px; }
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .pill { width: 100%; text-align: center; }
+      .cta-row { width: 100%; }
+      .btn, .ghost { width: 100%; text-align: center; }
+      .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <header>
+    <div class="brand">FlarionMine</div>
+    <div class="pill">Minecraft сервер — гриф и анархии</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Сервер №1 среди анархий и выживания</h1>
+        <p>Заходи, и становись лучшим.</p>
+        <div class="cta-row">
+          <button class="btn" onclick="scrollToTeam()">Наша команда</button>
+          <button class="btn ghost" onclick="window.open('https://t.me/flarionminecraft', '_blank')">Сообщество сервера</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="metrics">
+          <div class="metric">
+            <div class="label">Версия</div>
+            <div class="value">1.20.4 - 1.21.8</div>
+          </div>
+          <div class="metric">
+            <div class="label">Игроков онлайн</div>
+            <div class="value">0 / 100</div>
+          </div>
+          <div class="metric">
+            <div class="label">Открытие сервера</div>
+            <div class="value">2026.хх.хх</div>
+          </div>
+          <div class="metric">
+            <div class="label">Режим</div>
+            <div class="value">Анархия | Гриф</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title" id="team">Команда проекта</h2>
+    <div class="team-grid" id="teamGrid"></div>
+
+    <div class="footer">© 2026 FlarionMine. Все права защищены.</div>
+  </main>
+
+  <script>
+    const FALLBACK_AVATAR = 'assets/avatars/nova.png';
+
+    const team = [
+      { name: 'ha4zy44',      role: 'Владелец / Разработчик', appointed: '27-02-2026', telegram: '@oznoww',    avatar: '' },
+      { name: 'MWin',         role: 'Разработчик',            appointed: '27-02-2026', telegram: '@Hermange', avatar: '' },
+      { name: 'Flashka',   role: 'Младший разработчик', appointed: '27-02-2026', telegram: '@Flashka_Energy', avatar: '' },
+      { name: 'attackedduck',   role: 'PR-ассистент', appointed: '27-02-2026', telegram: '@attackedduck', avatar: '' },
+      { name: 'SpeedDead225', role: 'Тестировщик',            appointed: '27-02-2026', telegram: '@заполнить', avatar: '' },
+      { name: 'ILUHAAArte',   role: 'Администратор / Тестировщик', appointed: '27-02-2026', telegram: '@ffddryy', avatar: '' },
+      { name: 'lyt1_fase',    role: 'Модератор',              appointed: '27-02-2026', telegram: '@заполнить', avatar: '' }
+    ];
+
+    const tgAvatarFromHandle = (handle) => {
+      if (!handle) return null;
+      const clean = handle.replace('@', '').trim();
+      return clean ? `https://t.me/i/userpic/320/${encodeURIComponent(clean)}.jpg` : null;
+    };
+
+    const resolveAvatar = (member) => {
+      // если явно задан avatar (локальный файл или внешний URL) — используем его
+      if (member.avatar && !member.avatar.startsWith('auto:')) return member.avatar;
+      // иначе пробуем собрать линк по Telegram-юзернейму
+      const byTg = tgAvatarFromHandle(member.telegram);
+      return byTg || FALLBACK_AVATAR;
+    };
+
+    function renderTeam(list) {
+      const grid = document.getElementById('teamGrid');
+      grid.innerHTML = list.map(member => `
+        <article class="card">
+          <header>
+            <img class="avatar" src="${resolveAvatar(member)}" alt="${member.name}">
+            <div>
+              <div class="name">${member.name}</div>
+              <div class="role">${member.role}</div>
+            </div>
+          </header>
+          <div class="meta">
+            <span class="tag">Назначен: ${member.appointed}</span>
+            <span class="tag">TG: ${member.telegram}</span>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    renderTeam(team);
+
+    function scrollToTeam() {
+      document.getElementById('team').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>
