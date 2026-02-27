@@ -118,10 +118,10 @@
             <div class="label">Версия</div>
             <div class="value">1.20.4 - 1.21.8</div>
           </div>
-          <div class="metric">
+        <div class="metric">
             <div class="label">Игроков онлайн</div>
-            <div class="value">0 / 100</div>
-          </div>
+            <div class="value" id="onlineCount">—</div>
+        </div>
           <div class="metric">
             <div class="label">Открытие сервера</div>
             <div class="value">2026.хх.хх</div>
@@ -200,6 +200,26 @@
     function scrollToTeam() {
       document.getElementById('team').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    const SERVER_HOST = 'play.vibecraft.gg'; // поменяй на свой
+    const onlineEl = document.getElementById('onlineCount');
+
+    async function updateOnline() {
+        try {
+            const r = await fetch(`https://api.mcsrvstat.us/3/${SERVER_HOST}`, {cache: 'no-store'});
+            if (!r.ok) throw new Error(r.status);
+            const data = await r.json();
+            const players = data.players?.online ?? 0;
+            const max = data.players?.max ?? 0;
+            onlineEl.textContent = `${players} / ${max || '?'}`;
+        } catch (e) {
+        onlineEl.textContent = 'н/д';
+    }
+    }
+
+// первый вызов и автообновление раз в 60 секунд
+updateOnline();
+setInterval(updateOnline, 30000);
+
   </script>
 </body>
 </html>
