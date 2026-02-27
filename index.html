@@ -137,6 +137,9 @@
     <h2 class="section-title" id="team">Команда проекта</h2>
     <div class="team-grid" id="teamGrid"></div>
 
+    <h2 class="section-title" id="admins">Администрация серверов</h2>
+    <div class="team-grid" id="adminGrid"></div>
+
     <div class="footer">© 2026 FlarionMine. Все права защищены.</div>
   </main>
 
@@ -144,14 +147,19 @@
     const FALLBACK_AVATAR = 'assets/avatars/nova.png';
 
     const team = [
-      { name: 'nthnrksxz',      role: 'Владелец / Разработчик', appointed: '27-02-2026', telegram: '@oznoww',    avatar: '' },
-      { name: 'MWin',         role: 'Разработчик',            appointed: '27-02-2026', telegram: '@Hermange', avatar: '' },
-      { name: 'Flashka',   role: 'Младший разработчик', appointed: '27-02-2026', telegram: '@Flashka_Energy', avatar: '' },
-      { name: 'attackedduck',   role: 'PR-ассистент', appointed: '27-02-2026', telegram: '@attackedduck', avatar: '' },
-      { name: 'SpeedDead225', role: 'Тестировщик',            appointed: '27-02-2026', telegram: '@sakruch', avatar: '' },
-      { name: 'Lamilout',   role: 'Администратор / Тестировщик', appointed: '27-02-2026', telegram: '@Lamilout', avatar: '' },
-      { name: 'ILUHAAArte',   role: 'Администратор / Тестировщик', appointed: '27-02-2026', telegram: '@ffddryy', avatar: '' },
-      { name: 'lyt1_fase',    role: 'Модератор',              appointed: '27-02-2026', telegram: '@заполнить', avatar: '' }
+      { name: 'nthnrksxz',   role: 'Владелец / Разработчик', appointed: '27-02-2026', telegram: '@oznoww',       avatar: '' },
+      { name: 'MWin',        role: 'Разработчик',            appointed: '27-02-2026', telegram: '@Hermange',    avatar: '' },
+      { name: 'Flashka',     role: 'Младший разработчик',    appointed: '27-02-2026', telegram: '@Flashka_Energy', avatar: '' },
+      { name: 'attackedduck',role: 'PR-ассистент',           appointed: '27-02-2026', telegram: '@attackedduck', avatar: '' },
+      { name: 'SpeedDead225',role: 'Команда тестирования',            appointed: '27-02-2026', telegram: '@sakruch',     avatar: '' },
+      { name: 'Lamilout',    role: 'Команда тестирования', appointed: '27-02-2026', telegram: '@Lamilout', avatar: '' },
+      { name: 'ILUHAAArte',  role: 'Команда тестирования', appointed: '27-02-2026', telegram: '@ffddryy',  avatar: '' }
+    ];
+
+    const admins = [
+      { name: 'Lamilout',    role: 'Модератор', appointed: '27-02-2026', telegram: '@Lamilout',   mode: 'N/A', avatar: '' },
+      { name: 'ILUHAAArte',  role: 'Модератор', appointed: '27-02-2026', telegram: '@ffddryy',    mode: 'N/A',    avatar: '' },
+      { name: 'lyt1_fase',   role: 'Модератор',     appointed: '27-02-2026', telegram: '@lyt1_fase',  mode: 'N/A',avatar: '' }
     ];
 
     const tgAvatarFromHandle = (handle) => {
@@ -161,19 +169,17 @@
     };
 
     const resolveAvatar = (member) => {
-      // если явно задан avatar (локальный файл или внешний URL) — используем его
       if (member.avatar && !member.avatar.startsWith('auto:')) return member.avatar;
-      // иначе пробуем собрать линк по Telegram-юзернейму
       const byTg = tgAvatarFromHandle(member.telegram);
       return byTg || FALLBACK_AVATAR;
     };
 
-    function renderTeam(list) {
-      const grid = document.getElementById('teamGrid');
+    function renderList(list, targetId, showMode = false) {
+      const grid = document.getElementById(targetId);
       grid.innerHTML = list.map(member => `
         <article class="card">
           <header>
-            <img class="avatar" src="${resolveAvatar(member)}" alt="${member.name}">
+            <img class="avatar" src="${resolveAvatar(member)}" alt="${member.name}" onerror="this.src='${FALLBACK_AVATAR}'">
             <div>
               <div class="name">${member.name}</div>
               <div class="role">${member.role}</div>
@@ -182,12 +188,14 @@
           <div class="meta">
             <span class="tag">Назначен: ${member.appointed}</span>
             <span class="tag">TG: ${member.telegram}</span>
+            ${showMode ? `<span class="tag">Режим: ${member.mode}</span>` : ''}
           </div>
         </article>
       `).join('');
     }
 
-    renderTeam(team);
+    renderList(team, 'teamGrid', false);
+    renderList(admins, 'adminGrid', true);
 
     function scrollToTeam() {
       document.getElementById('team').scrollIntoView({ behavior: 'smooth', block: 'start' });
